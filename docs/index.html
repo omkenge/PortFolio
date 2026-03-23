@@ -1,352 +1,848 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>OK Portfolio</title>
-    <link rel="shortcut icon" href="img/favicon.ico">
-    <link rel="stylesheet" href="style.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-   
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
-      rel="stylesheet"
-    />
-    <!--=========================================== 
-                    Box icon Pack
-      =============================================  -->
-    <link
-      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
-      rel="stylesheet"
-    />
-  </head>
-  <body>
-    <!--=========================================== 
-                      header section
-      =============================================  -->
-    <header class="header">
-      <a href="" class="logo">Om Kenge Portfolio</a>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Om Kenge — Data Engineer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+  <style>
+    /* ─── RESET & ROOT ─────────────────────────────────────── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg:       #060b12;
+      --bg2:      #0b1220;
+      --bg3:      #0f1a2e;
+      --border:   #141f30;
+      --border2:  #1e2f45;
+      --green:    #00ffb4;
+      --blue:     #00b4ff;
+      --red:      #ff6b6b;
+      --purple:   #c084fc;
+      --yellow:   #fbbf24;
+      --teal:     #34d399;
+      --text:     #e2e8f0;
+      --muted:    #4a6080;
+      --muted2:   #2a3f55;
+      --mono:     'Space Mono', monospace;
+      --sans:     'Syne', sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: var(--sans); overflow-x: hidden; cursor: none; }
 
-      <div class="bx bx-menu" id="menu-icon"></div>
+    /* ─── CUSTOM CURSOR ────────────────────────────────────── */
+    .cursor { position: fixed; width: 10px; height: 10px; border-radius: 50%; background: var(--green); pointer-events: none; z-index: 10000; transform: translate(-50%,-50%); transition: transform .1s; mix-blend-mode: screen; }
+    .cursor-ring { position: fixed; width: 32px; height: 32px; border-radius: 50%; border: 1px solid rgba(0,255,180,0.4); pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); transition: left .12s ease, top .12s ease; }
 
-      <nav class="navbar">
-        <a href="#home" class="active">Home</a>
-        <a href="#about">About</a>
-        <a href="#education">Education & Experience</a>
-        <a href="#skills">Skills</a>
-        <a href="#contact">Contact Me</a>
+    /* ─── SCROLLBAR ────────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--green); border-radius: 4px; }
 
-        <span class="active-nav"></span>
-      </nav>
-    </header>
+    /* ─── BG ELEMENTS ──────────────────────────────────────── */
+    .bg-grid {
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background-image: linear-gradient(rgba(0,255,180,.025) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(0,255,180,.025) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+    .bg-noise {
+      position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: .04;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    }
+    .glow-orb {
+      position: fixed; width: 700px; height: 700px; border-radius: 50%; pointer-events: none; z-index: 0;
+      background: radial-gradient(circle, rgba(0,255,180,.05) 0%, transparent 70%);
+      top: -250px; left: -250px; animation: drift 15s ease-in-out infinite alternate;
+    }
+    .glow-orb2 {
+      position: fixed; width: 500px; height: 500px; border-radius: 50%; pointer-events: none; z-index: 0;
+      background: radial-gradient(circle, rgba(0,180,255,.04) 0%, transparent 70%);
+      bottom: -200px; right: -100px; animation: drift2 18s ease-in-out infinite alternate;
+    }
+    @keyframes drift  { to { transform: translate(200px, 150px); } }
+    @keyframes drift2 { to { transform: translate(-150px,-100px); } }
 
-    <!--=========================================== 
-                     Home section
-      =============================================  -->
-    <section class="home" id="home">
-      <div class="home-content">
-        <h1>Hi, I am <span>Om Kenge</span></h1>
+    /* ─── HEADER / NAV ─────────────────────────────────────── */
+    header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 6%;
+      border-bottom: 1px solid var(--border);
+      background: rgba(6,11,18,.85);
+      backdrop-filter: blur(16px);
+    }
+    .logo {
+      font-family: var(--mono); font-size: 13px; color: var(--green);
+      text-decoration: none; letter-spacing: .05em;
+    }
+    .logo span { color: var(--muted); }
+    nav { display: flex; align-items: center; gap: 32px; }
+    nav a {
+      font-family: var(--mono); font-size: 11px; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--muted); text-decoration: none;
+      transition: color .3s; position: relative;
+    }
+    nav a::after {
+      content: ''; position: absolute; bottom: -4px; left: 0; right: 0;
+      height: 1px; background: var(--green); transform: scaleX(0);
+      transition: transform .3s; transform-origin: left;
+    }
+    nav a:hover, nav a.active { color: var(--green); }
+    nav a:hover::after, nav a.active::after { transform: scaleX(1); }
+    .nav-status {
+      display: flex; align-items: center; gap: 8px;
+      font-family: var(--mono); font-size: 10px; color: var(--muted);
+    }
+    .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: blink 2s ease-in-out infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+    .hamburger span { display: block; width: 22px; height: 2px; background: var(--text); border-radius: 2px; transition: .3s; }
 
-        <div class="text-animate">
-          <span id="element"></span>
-        </div>
-    <p>
-      I am self-motivated and passionate programmer seeking for an opportunity to prove myself by working in
-challenging envirnment solving critical problems and utilizing my knowledge for growth of the organisation.
+    /* ─── SECTION BASE ─────────────────────────────────────── */
+    section { position: relative; z-index: 1; padding: 100px 6%; }
+    section:first-of-type { padding-top: 140px; }
+    .section-label {
+      font-family: var(--mono); font-size: 10px; letter-spacing: .3em;
+      color: var(--green); text-transform: uppercase; margin-bottom: 12px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .section-label::before { content: ''; display: inline-block; width: 20px; height: 1px; background: var(--green); }
+    h2.heading {
+      font-size: clamp(2rem,5vw,3.4rem); font-weight: 900; letter-spacing: -.03em; margin-bottom: 60px;
+    }
+    h2.heading span { color: var(--green); }
 
-    </p>
+    /* ─── HOME ─────────────────────────────────────────────── */
+    .home { min-height: 100vh; display: flex; align-items: center; padding-top: 100px; }
+    .home-inner { display: grid; grid-template-columns: 1fr 420px; gap: 60px; align-items: center; width: 100%; }
+    .home-tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--mono); font-size: 11px; color: var(--green);
+      border: 1px solid rgba(0,255,180,.2); background: rgba(0,255,180,.06);
+      padding: 6px 14px; border-radius: 20px; margin-bottom: 24px;
+    }
+    .home h1 { font-size: clamp(2.6rem,6vw,4.2rem); font-weight: 900; letter-spacing: -.04em; line-height: 1.05; margin-bottom: 16px; }
+    .home h1 .name { color: var(--green); }
+    .home-role {
+      font-family: var(--mono); font-size: 14px; color: var(--blue);
+      margin-bottom: 20px; min-height: 22px;
+    }
+    .home-role .cursor-blink { display: inline-block; width: 2px; height: 14px; background: var(--blue); margin-left: 2px; animation: blink .8s step-end infinite; vertical-align: middle; }
+    .home p {
+      font-family: var(--mono); font-size: 13px; color: var(--muted); line-height: 1.9;
+      max-width: 520px; margin-bottom: 36px; border-left: 2px solid var(--border2); padding-left: 16px;
+    }
+    .btn-group { display: flex; gap: 14px; flex-wrap: wrap; }
+    .btn {
+      font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase;
+      padding: 12px 28px; border-radius: 4px; text-decoration: none; transition: .3s; cursor: none;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-primary { background: var(--green); color: #060b12; font-weight: 700; }
+    .btn-primary:hover { background: transparent; color: var(--green); box-shadow: inset 0 0 0 1px var(--green); }
+    .btn-outline { background: transparent; color: var(--text); box-shadow: inset 0 0 0 1px var(--border2); }
+    .btn-outline:hover { border-color: var(--green); color: var(--green); box-shadow: inset 0 0 0 1px var(--green); }
+    .home-social { display: flex; gap: 16px; margin-top: 32px; }
+    .home-social a {
+      width: 40px; height: 40px; border-radius: 6px; border: 1px solid var(--border2);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--muted); font-size: 18px; text-decoration: none; transition: .3s;
+    }
+    .home-social a:hover { border-color: var(--green); color: var(--green); box-shadow: 0 0 16px rgba(0,255,180,.15); }
+    /* Terminal card */
+    .terminal {
+      background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
+      box-shadow: 0 24px 80px rgba(0,0,0,.5);
+    }
+    .terminal-bar {
+      display: flex; align-items: center; gap: 8px; padding: 12px 16px;
+      border-bottom: 1px solid var(--border); background: var(--bg3);
+    }
+    .t-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .t-dot.r { background: #ff5f57; }
+    .t-dot.y { background: #febc2e; }
+    .t-dot.g { background: #28c840; }
+    .t-title { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-left: auto; }
+    .terminal-body { padding: 20px; font-family: var(--mono); font-size: 12px; line-height: 2; }
+    .t-line { display: flex; align-items: flex-start; gap: 10px; }
+    .t-prompt { color: var(--green); flex-shrink: 0; }
+    .t-cmd { color: var(--text); }
+    .t-out { color: var(--muted); padding-left: 20px; }
+    .t-key { color: var(--blue); }
+    .t-val { color: var(--yellow); }
+    .t-highlight { color: var(--green); }
 
-        <div class="btn-box">
-          <a href="OM_KENGE.pdf" class="btn" download>Download CV</a>
-          <a href="https://discord.gg/MnqPCfdv" target="_blank" class="btn">Let's Talk</a>
-        </div>
+    /* ─── ABOUT ─────────────────────────────────────────────── */
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
+    .about-left {}
+    .about-img-wrap {
+      position: relative; width: 260px; height: 260px;
+      margin-bottom: 32px;
+    }
+    .about-img-wrap img {
+      width: 100%; height: 100%; object-fit: cover; border-radius: 12px;
+      border: 1px solid var(--border2); filter: grayscale(20%);
+    }
+    .about-img-wrap::before {
+      content: ''; position: absolute; inset: -10px; border-radius: 16px;
+      border: 1px solid var(--green); opacity: .2;
+    }
+    .about-img-wrap::after {
+      content: 'data_engineer.jpg'; position: absolute; bottom: -30px; left: 0;
+      font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: .05em;
+    }
+    .about-right {}
+    .about-desc {
+      font-family: var(--mono); font-size: 13px; color: var(--muted); line-height: 1.9; margin-bottom: 28px;
+    }
+    .about-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 32px; }
+    .chip {
+      font-family: var(--mono); font-size: 11px;
+      padding: 6px 14px; border-radius: 4px; border: 1px solid var(--border2);
+      color: var(--muted); background: var(--bg2);
+      transition: .3s;
+    }
+    .chip:hover { border-color: var(--green); color: var(--green); }
+    .stats-mini { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+    .stat-mini-box {
+      background: var(--bg2); border: 1px solid var(--border); border-radius: 8px;
+      padding: 18px 14px; text-align: center;
+    }
+    .stat-mini-num { font-size: 1.6rem; font-weight: 900; color: var(--green); }
+    .stat-mini-label { font-family: var(--mono); font-size: 10px; color: var(--muted); margin-top: 4px; letter-spacing: .05em; }
+
+    /* ─── EDUCATION / EXPERIENCE ────────────────────────────── */
+    .edu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+    .edu-col-title {
+      font-family: var(--mono); font-size: 11px; letter-spacing: .2em; color: var(--green);
+      text-transform: uppercase; margin-bottom: 28px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .edu-col-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .timeline { position: relative; padding-left: 28px; }
+    .timeline::before { content: ''; position: absolute; left: 6px; top: 0; bottom: 0; width: 1px; background: var(--border2); }
+    .tl-item { position: relative; margin-bottom: 32px; }
+    .tl-dot {
+      position: absolute; left: -28px; top: 6px;
+      width: 12px; height: 12px; border-radius: 50%;
+      border: 2px solid var(--green); background: var(--bg);
+      box-shadow: 0 0 8px rgba(0,255,180,.3);
+    }
+    .tl-year {
+      font-family: var(--mono); font-size: 10px; color: var(--green);
+      letter-spacing: .1em; margin-bottom: 6px;
+    }
+    .tl-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 6px; line-height: 1.3; }
+    .tl-body { font-family: var(--mono); font-size: 11px; color: var(--muted); line-height: 1.8; }
+    .tl-badge {
+      display: inline-block; font-family: var(--mono); font-size: 10px;
+      padding: 3px 10px; border-radius: 3px; margin-bottom: 8px;
+      border: 1px solid rgba(0,255,180,.2); color: var(--green); background: rgba(0,255,180,.06);
+    }
+    .achievement-tag {
+      display: inline-block; font-family: var(--mono); font-size: 10px;
+      padding: 2px 8px; border-radius: 3px; margin: 2px 2px 4px 0;
+      border: 1px solid var(--border2); color: var(--muted); background: var(--bg2);
+    }
+
+    /* ─── SKILLS ────────────────────────────────────────────── */
+    /* Pipeline bar */
+    .pipeline-strip {
+      display: flex; align-items: center; margin-bottom: 52px;
+      overflow-x: auto; padding-bottom: 4px;
+    }
+    .pipeline-strip::-webkit-scrollbar { height: 3px; }
+    .pipeline-strip::-webkit-scrollbar-thumb { background: var(--green); }
+    .pipe-node {
+      flex-shrink: 0; font-family: var(--mono); font-size: 11px;
+      padding: 8px 18px; border: 1px solid var(--border2); border-radius: 6px; color: var(--muted);
+      background: var(--bg2); white-space: nowrap; transition: .3s; cursor: default;
+    }
+    .pipe-node:hover { border-color: var(--green); color: var(--green); box-shadow: 0 0 12px rgba(0,255,180,.12); }
+    .pipe-arrow { flex-shrink: 0; width: 36px; height: 1px; background: linear-gradient(90deg,var(--border2),var(--green),var(--border2)); position: relative; }
+    .pipe-arrow::after { content:'▶'; position:absolute; right:-5px; top:50%; transform:translateY(-50%); font-size:7px; color:var(--green); }
+    .pipe-live { flex-shrink:0; width:8px; height:8px; border-radius:50%; background:var(--green); box-shadow:0 0 8px var(--green); animation:blink 1.5s ease-in-out infinite; }
+
+    .skills-cards { display: grid; grid-template-columns: repeat(auto-fill,minmax(280px,1fr)); gap: 20px; }
+    .sk-card {
+      background: var(--bg2); border: 1px solid var(--border); border-radius: 12px;
+      padding: 24px; position: relative; overflow: hidden; transition: .3s;
+    }
+    .sk-card::after {
+      content:''; position:absolute; top:0;left:0;right:0; height:2px;
+      background:var(--accent,var(--green)); transform:scaleX(0); transform-origin:left; transition:transform .4s;
+    }
+    .sk-card:hover { transform:translateY(-4px); border-color:var(--accent,var(--green)); box-shadow:0 8px 40px rgba(0,0,0,.4); }
+    .sk-card:hover::after { transform:scaleX(1); }
+    .sk-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:18px; }
+    .sk-icon { font-size:22px; }
+    .sk-tag {
+      font-family:var(--mono); font-size:10px; letter-spacing:.1em;
+      padding:4px 10px; border-radius:20px; color:var(--accent,var(--green));
+      background: color-mix(in srgb, var(--accent,var(--green)) 10%, transparent);
+      border: 1px solid color-mix(in srgb, var(--accent,var(--green)) 25%, transparent);
+    }
+    .sk-title { font-size:1rem; font-weight:700; margin-bottom:4px; }
+    .sk-sub { font-family:var(--mono); font-size:10px; color:var(--muted); margin-bottom:18px; }
+    .sk-bar-row { margin-bottom:10px; }
+    .sk-bar-meta { display:flex; justify-content:space-between; margin-bottom:4px; }
+    .sk-bar-name { font-family:var(--mono); font-size:11px; color:var(--muted); }
+    .sk-bar-pct { font-family:var(--mono); font-size:11px; color:var(--accent,var(--green)); }
+    .sk-track { height:3px; background:#111c2a; border-radius:4px; overflow:hidden; }
+    .sk-fill { height:100%; border-radius:4px; width:0%; transition:width 1.3s cubic-bezier(.4,0,.2,1); background: linear-gradient(90deg, var(--accent,var(--green)), color-mix(in srgb, var(--accent,var(--green)) 70%, white)); box-shadow:0 0 6px var(--accent,var(--green)); }
+
+    /* ─── CONTACT ───────────────────────────────────────────── */
+    .contact-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
+    .contact-info {}
+    .contact-info p { font-family:var(--mono); font-size:13px; color:var(--muted); line-height:1.9; margin-bottom:28px; }
+    .contact-links { display:flex; flex-direction:column; gap:14px; }
+    .contact-link {
+      display:flex; align-items:center; gap:14px;
+      font-family:var(--mono); font-size:12px; color:var(--muted);
+      text-decoration:none; border:1px solid var(--border); border-radius:8px; padding:14px 18px;
+      background:var(--bg2); transition:.3s;
+    }
+    .contact-link i { font-size:18px; color:var(--green); }
+    .contact-link:hover { border-color:var(--green); color:var(--green); transform:translateX(4px); }
+    .contact-form {}
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; }
+    .form-field { display:flex; flex-direction:column; gap:8px; margin-bottom:16px; }
+    .form-field label { font-family:var(--mono); font-size:10px; letter-spacing:.1em; color:var(--muted); text-transform:uppercase; }
+    .form-field input, .form-field textarea {
+      background:var(--bg2); border:1px solid var(--border); border-radius:6px;
+      color:var(--text); font-family:var(--mono); font-size:12px; padding:12px 16px;
+      outline:none; transition:.3s; resize:vertical;
+    }
+    .form-field input:focus, .form-field textarea:focus { border-color:var(--green); box-shadow:0 0 0 3px rgba(0,255,180,.08); }
+    .form-field input::placeholder, .form-field textarea::placeholder { color:var(--muted); }
+    .form-submit {
+      background:var(--green); color:#060b12; border:none; font-family:var(--mono);
+      font-size:12px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+      padding:14px 32px; border-radius:4px; cursor:none; transition:.3s; width:100%;
+    }
+    .form-submit:hover { background:transparent; color:var(--green); box-shadow:inset 0 0 0 1px var(--green); }
+
+    /* ─── FOOTER ────────────────────────────────────────────── */
+    footer {
+      position:relative; z-index:1; border-top:1px solid var(--border);
+      display:flex; align-items:center; justify-content:space-between;
+      padding:24px 6%; font-family:var(--mono); font-size:11px; color:var(--muted);
+    }
+    .back-top {
+      width:36px; height:36px; border:1px solid var(--border); border-radius:6px;
+      display:flex; align-items:center; justify-content:center;
+      color:var(--muted); text-decoration:none; transition:.3s; font-size:16px;
+    }
+    .back-top:hover { border-color:var(--green); color:var(--green); }
+
+    /* ─── DIVIDER ───────────────────────────────────────────── */
+    .section-divider {
+      position:relative; z-index:1; height:1px; background:var(--border);
+      margin: 0 6%;
+    }
+
+    /* ─── RESPONSIVE ────────────────────────────────────────── */
+    @media(max-width: 900px) {
+      .home-inner { grid-template-columns:1fr; }
+      .terminal { display:none; }
+      .about-grid, .edu-grid, .contact-wrap { grid-template-columns:1fr; }
+      .form-row { grid-template-columns:1fr; }
+      nav { display:none; position:fixed; top:64px; left:0; right:0; flex-direction:column; gap:0; background:rgba(6,11,18,.97); border-bottom:1px solid var(--border); padding:16px 0; }
+      nav.open { display:flex; }
+      nav a { padding:14px 6%; border-bottom:1px solid var(--border); }
+      .hamburger { display:flex; }
+      .nav-status { display:none; }
+      .about-img-wrap { width:200px; height:200px; }
+    }
+    @media(max-width:600px) {
+      section { padding:80px 5%; }
+      .stats-mini { grid-template-columns:repeat(3,1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Custom cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- Background -->
+<div class="bg-grid"></div>
+<div class="bg-noise"></div>
+<div class="glow-orb"></div>
+<div class="glow-orb2"></div>
+
+<!-- ═══════════════════════════════════════════════
+     HEADER
+════════════════════════════════════════════════ -->
+<header>
+  <a href="#home" class="logo"><span>~/</span>om_kenge</a>
+  <div class="hamburger" id="hamburger">
+    <span></span><span></span><span></span>
+  </div>
+  <nav id="nav">
+    <a href="#home" class="active">home</a>
+    <a href="#about">about</a>
+    <a href="#education">journey</a>
+    <a href="#skills">stack</a>
+    <a href="#contact">contact</a>
+  </nav>
+  <div class="nav-status">
+    <div class="status-dot"></div>
+    available for opportunities
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════════
+     HOME
+════════════════════════════════════════════════ -->
+<section class="home" id="home">
+  <div class="home-inner">
+    <div class="home-content">
+      <div class="home-tag">
+        <div class="status-dot"></div>
+        Data Engineer · Pune, India
+      </div>
+      <h1>Hi, I'm<br><span class="name">Om Kenge</span></h1>
+      <div class="home-role" id="typeTarget"><span class="cursor-blink"></span></div>
+      <p>Self-motivated data engineer building scalable pipelines, optimizing cloud infrastructure, and turning raw data into reliable, high-quality assets. Passionate about clean architecture, automation, and making data work at scale.</p>
+      <div class="btn-group">
+        <a href="OM_KENGE.pdf" download class="btn btn-primary">↓ Download CV</a>
+        <a href="https://discord.gg/MnqPCfdv" target="_blank" class="btn btn-outline">↗ Let's Talk</a>
       </div>
       <div class="home-social">
-        <a href="www.linkedin.com/in/omkenge" target="_blank"
-          ><i class="bx bxl-linkedin"></i
-        ></a>
-        <a href="https://github.com/omkenge" target="_blank"
-          ><i class="bx bxl-github"></i
-        ></a>
-        <a
-          href="https://instagram.com/om.kenge?igshid=MzNlNGNkZWQ4Mg=="
-          target="_blank"
-          ><i class="bx bxl-instagram"></i
-        ></a>
-      </div>
-      <div class="home-imghover"></div>
-    </section>
-
-    <!--=========================================== 
-                      About section
-      =============================================  -->
-    <section class="about" id="about">
-      <h2 class="heading">About <span>Me</span></h2>
-      <div class="about-img">
-        <img src="img/About.jpg" alt="aboutimg" />
-        <span class="circle-spin"></span>
-      </div>
-
-      <div class="about-content">
-        <h3>Learner</h3>
-        <p>
-        
-        </p>
-
-        <div class="btn-box btns">
-          <a href="#" class="btn">Read More</a>
-        </div>
-      </div>
-    </section>
-
-    <!--=========================================== 
-                      Education section
-      =============================================  -->
-   <section class="education" id="education">
-  <h2 class="heading">My <span>Journey</span></h2>
-
-  <div class="education-row">
-
-    <!-- Education Column -->
-    <div class="education-column">
-      <h3 class="title">Education</h3>
-
-      <div class="education-box">
-
-        <!-- B.E -->
-        <div class="education-content">
-          <div class="content">
-            <div class="year"><i class="bx bxs-calendar"></i> 2020 - 2024</div>
-            <h3>B.E (Information Technology) - MM's College of Engineering, Pune</h3>
-            <p>
-              Completed Bachelor of Engineering in Information Technology.
-            </p>
-          </div>
-        </div>
-
-        <!-- HSC -->
-        <div class="education-content">
-          <div class="content">
-            <div class="year"><i class="bx bxs-calendar"></i> 2020</div>
-            <h3>HSC (12th) - M.S.G College</h3>
-            <p>
-              Completed Higher Secondary Certificate (Science) with 80% marks.
-            </p>
-          </div>
-        </div>
-
-        <!-- SSC -->
-        <div class="education-content">
-          <div class="content">
-            <div class="year"><i class="bx bxs-calendar"></i> 2018</div>
-            <h3>SSC (10th) - ZPKV Malegaon</h3>
-            <p>
-              Completed Secondary School Certificate with 95.25% marks.
-            </p>
-          </div>
-        </div>
-
+        <a href="https://www.linkedin.com/in/omkenge" target="_blank"><i class="bx bxl-linkedin"></i></a>
+        <a href="https://github.com/omkenge" target="_blank"><i class="bx bxl-github"></i></a>
+        <a href="https://instagram.com/om.kenge?igshid=MzNlNGNkZWQ4Mg==" target="_blank"><i class="bx bxl-instagram"></i></a>
       </div>
     </div>
-
-    <!-- Experience Column -->
-    <div class="education-column">
-      <h3 class="title">Experience</h3>
-
-      <div class="education-box">
-
-        <!-- Brose Group -->
-        <div class="education-content">
-          <div class="content">
-            <div class="year"><i class="bx bxs-calendar"></i> June 2024 - April 2026</div>
-            <h3>Data Engineer - Brose Group</h3>
-            <p>
-              Data Engineer with experience in building scalable data pipelines and optimizing cloud infrastructure.
-              Reduced AWS costs by 45% through AWS Glue optimization, improved partitioning, and compression strategies.
-              Skilled in PySpark, AWS Glue, and Apache Iceberg for efficient data processing.
-              Designed a Docker-based Spark testing environment using Pytest to ensure ETL reliability.
-              Implemented Medallion Architecture using DBT and orchestrated workflows with Dagster.
-            </p>
-          </div>
-        </div>
-
-        <!-- FunServe -->
-        <div class="education-content">
-          <div class="content">
-            <div class="year"><i class="bx bxs-calendar"></i> Feb 2023 - April 2023</div>
-            <h3>Data Engineer Trainee (Backend) - FunServe Solutions LLP</h3>
-            <p>
-              Built and maintained .NET-based REST APIs for data ingestion, validation, and downstream processing.
-              Designed reliable data flows ensuring structured and consistent data availability.
-              Documented APIs using Swagger and tracked tasks using JIRA in an agile environment.
-            </p>
-          </div>
-        </div>
-
+    <!-- Terminal card -->
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="t-dot r"></span>
+        <span class="t-dot y"></span>
+        <span class="t-dot g"></span>
+        <span class="t-title">om@pipeline ~ zsh</span>
+      </div>
+      <div class="terminal-body">
+        <div class="t-line"><span class="t-prompt">❯</span><span class="t-cmd">cat engineer.json</span></div>
+        <div class="t-out">{</div>
+        <div class="t-out">&nbsp;&nbsp;<span class="t-key">"name"</span>: <span class="t-val">"Om Kenge"</span>,</div>
+        <div class="t-out">&nbsp;&nbsp;<span class="t-key">"role"</span>: <span class="t-val">"Data Engineer"</span>,</div>
+        <div class="t-out">&nbsp;&nbsp;<span class="t-key">"company"</span>: <span class="t-val">"Brose Group"</span>,</div>
+        <div class="t-out">&nbsp;&nbsp;<span class="t-key">"location"</span>: <span class="t-val">"Pune, India"</span>,</div>
+        <div class="t-out">&nbsp;&nbsp;<span class="t-key">"stack"</span>: [</div>
+        <div class="t-out">&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-val">"PySpark"</span>, <span class="t-val">"Dagster"</span>,</div>
+        <div class="t-out">&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-val">"DBT"</span>, <span class="t-val">"AWS Glue"</span>,</div>
+        <div class="t-out">&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-val">"Iceberg"</span>, <span class="t-val">"Docker"</span></div>
+        <div class="t-out">&nbsp;&nbsp;],</div>
+        <div class="t-out">&nbsp;&nbsp;<span class="t-key">"cost_saved"</span>: <span class="t-highlight">"45% AWS ↓"</span>,</div>
+        <div class="t-out">&nbsp;&nbsp;<span class="t-key">"status"</span>: <span class="t-highlight">"available"</span></div>
+        <div class="t-out">}</div>
+        <div class="t-line" style="margin-top:8px"><span class="t-prompt">❯</span><span class="t-cmd" id="termCursor">_</span></div>
       </div>
     </div>
-
   </div>
 </section>
-    <!--=========================================== 
-                      Skills section
-      =============================================  -->
-  <section class="skills" id="skills">
+
+<div class="section-divider"></div>
+
+<!-- ═══════════════════════════════════════════════
+     ABOUT
+════════════════════════════════════════════════ -->
+<section id="about">
+  <div class="section-label">about.me</div>
+  <h2 class="heading">Who <span>I Am</span></h2>
+  <div class="about-grid">
+    <div class="about-left">
+      <div class="about-img-wrap">
+        <img src="img/About.jpg" alt="Om Kenge" onerror="this.style.background='#0b1220';this.style.display='flex'"/>
+      </div>
+    </div>
+    <div class="about-right">
+      <p class="about-desc">
+        I'm a Data Engineer at Brose Group with a passion for building robust, scalable data infrastructure.
+        I specialize in designing end-to-end pipelines — from ingestion to transformation to serving —
+        with a strong focus on reliability, cost efficiency, and clean architecture.<br><br>
+        With hands-on experience in PySpark, AWS Glue, DBT, Dagster, and Apache Iceberg,
+        I've delivered pipelines that cut cloud costs by 45% and brought Medallion Architecture
+        to production. I believe great data engineering is invisible — it just works.
+      </p>
+      <div class="about-chips">
+        <span class="chip">PySpark</span>
+        <span class="chip">AWS Glue</span>
+        <span class="chip">DBT</span>
+        <span class="chip">Dagster</span>
+        <span class="chip">Apache Iceberg</span>
+        <span class="chip">Docker</span>
+        <span class="chip">Python</span>
+        <span class="chip">SQL</span>
+        <span class="chip">Medallion Architecture</span>
+      </div>
+      <div class="stats-mini">
+        <div class="stat-mini-box">
+          <div class="stat-mini-num">2+</div>
+          <div class="stat-mini-label">Years Exp</div>
+        </div>
+        <div class="stat-mini-box">
+          <div class="stat-mini-num">45%</div>
+          <div class="stat-mini-label">Cost Cut</div>
+        </div>
+        <div class="stat-mini-box">
+          <div class="stat-mini-num">∞</div>
+          <div class="stat-mini-label">Learning</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ═══════════════════════════════════════════════
+     EDUCATION & EXPERIENCE
+════════════════════════════════════════════════ -->
+<section id="education">
+  <div class="section-label">career.log</div>
+  <h2 class="heading">My <span>Journey</span></h2>
+  <div class="edu-grid">
+    <!-- Education -->
+    <div>
+      <div class="edu-col-title">Education</div>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-year">2020 — 2024</div>
+          <div class="tl-title">B.E Information Technology</div>
+          <div class="tl-badge">MM's College of Engineering, Pune</div>
+          <div class="tl-body">Bachelor of Engineering in Information Technology. Built a strong foundation in software systems, databases, networking, and algorithms.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-year">2020</div>
+          <div class="tl-title">HSC — 12th Grade (Science)</div>
+          <div class="tl-badge">M.S.G College</div>
+          <div class="tl-body">Completed Higher Secondary Certificate with 80% marks in the Science stream.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-year">2018</div>
+          <div class="tl-title">SSC — 10th Grade</div>
+          <div class="tl-badge">ZPKV Malegaon</div>
+          <div class="tl-body">Completed Secondary School Certificate with an outstanding 95.25% marks.</div>
+        </div>
+      </div>
+    </div>
+    <!-- Experience -->
+    <div>
+      <div class="edu-col-title">Experience</div>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot" style="border-color:var(--blue); box-shadow:0 0 8px rgba(0,180,255,.3)"></div>
+          <div class="tl-year">June 2024 — April 2026</div>
+          <div class="tl-title">Data Engineer</div>
+          <div class="tl-badge" style="color:var(--blue);border-color:rgba(0,180,255,.2);background:rgba(0,180,255,.06)">Brose Group</div>
+          <div class="tl-body">
+            Built scalable data pipelines and optimized cloud infrastructure.<br>
+            <span class="achievement-tag">↓ 45% AWS cost</span>
+            <span class="achievement-tag">AWS Glue optimization</span>
+            <span class="achievement-tag">Apache Iceberg</span>
+            <span class="achievement-tag">Medallion Architecture</span>
+            <span class="achievement-tag">DBT + Dagster</span>
+            <span class="achievement-tag">Docker Spark testing</span>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot" style="border-color:var(--purple); box-shadow:0 0 8px rgba(192,132,252,.3)"></div>
+          <div class="tl-year">Feb 2023 — April 2023</div>
+          <div class="tl-title">Data Engineer Trainee (Backend)</div>
+          <div class="tl-badge" style="color:var(--purple);border-color:rgba(192,132,252,.2);background:rgba(192,132,252,.06)">FunServe Solutions LLP</div>
+          <div class="tl-body">
+            Built and maintained .NET REST APIs for data ingestion and validation.<br>
+            <span class="achievement-tag">REST APIs</span>
+            <span class="achievement-tag">Swagger docs</span>
+            <span class="achievement-tag">JIRA / Agile</span>
+            <span class="achievement-tag">.NET</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ═══════════════════════════════════════════════
+     SKILLS
+════════════════════════════════════════════════ -->
+<section id="skills">
+  <div class="section-label">stack.overview</div>
   <h2 class="heading">My <span>Tech Stack</span></h2>
 
-  <div class="skills-grid">
+  <!-- Pipeline strip -->
+  <div class="pipeline-strip">
+    <div class="pipe-live"></div>
+    <div class="pipe-arrow"></div>
+    <div class="pipe-node">INGEST</div>
+    <div class="pipe-arrow"></div>
+    <div class="pipe-node">PROCESS</div>
+    <div class="pipe-arrow"></div>
+    <div class="pipe-node">TRANSFORM</div>
+    <div class="pipe-arrow"></div>
+    <div class="pipe-node">WAREHOUSE</div>
+    <div class="pipe-arrow"></div>
+    <div class="pipe-node">ORCHESTRATE</div>
+    <div class="pipe-arrow"></div>
+    <div class="pipe-node">SERVE</div>
+    <div class="pipe-arrow"></div>
+    <div class="pipe-live" style="animation-delay:.8s"></div>
+  </div>
 
-    <div class="skill-box">
-      <h3>⚙️ Data Engineering</h3>
-      <ul>
-        <li>Apache Spark / PySpark</li>
-        <li>Apache Iceberg</li>
-        <li>DBT</li>
-        <li>Dagster</li>
-        <li>Kafka</li>
-      </ul>
+  <div class="skills-cards">
+
+    <!-- Data Engineering -->
+    <div class="sk-card" style="--accent:#00ffb4">
+      <div class="sk-header">
+        <span class="sk-icon">⚙️</span>
+        <span class="sk-tag">CORE</span>
+      </div>
+      <div class="sk-title">Data Engineering</div>
+      <div class="sk-sub">// pipeline architecture & processing</div>
+      <div class="sk-bar-row"><div class="sk-bar-meta"><span class="sk-bar-name">PySpark / Apache Spark</span><span class="sk-bar-pct">85%</span></div><div class="sk-track"><div class="sk-fill" data-w="85"></div></div></div>
+      <div class="sk-bar-row"><div class="sk-bar-meta"><span class="sk-bar-name">Apache Iceberg</span><span class="sk-bar-pct">80%</span></div><div class="sk-track"><div class="sk-fill" data-w="80"></div></div></div>
+      <div class="sk-bar-row"><div class="sk-bar-meta"><span class="sk-bar-name">DBT</span><span class="sk-bar-pct">80%</span></div><div class="sk-track"><div class="sk-fill" data-w="80"></div></div></div>
+      <div class="sk-bar-row"><div class="sk-bar-meta"><span class="sk-bar-name">Apache Kafka</span><span class="sk-bar-pct">65%</span></div><div class="sk-track"><div class="sk-fill" data-w="65"></div></div></div>
     </div>
 
-    <div class="skill-box">
-      <h3>☁️ Cloud</h3>
-      <ul>
-        <li>AWS Glue</li>
-        <li>S3 / EC2</li>
-        <li>Lambda</li>
-        <li>Amazon Bedrock</li>
-      </ul>
+    <!-- Cloud -->
+    <div class="sk-card" style="--accent:#fbbf24">
+      <div class="sk-header">
+        <span class="sk-icon">☁️</span>
+        <span class="sk-tag" style="color:#fbbf24;background:rgba(251,191,36,.1);border-color:rgba(251,191,36,.25)">CLOUD</span>
+      </div>
+      <div class="sk-title">AWS Cloud</div>
+      <div class="sk-sub">// scalable & cost-optimized infrastructure</div>
+      <div class="sk-bar-row"><div class="sk-bar-meta"><span class="sk-bar-name">AWS Glue</span><span class="sk-bar-pct" style="color:#fbbf24">90%</span></div><div class="sk-track"><div class="sk-fill" data-w="90"></div></div></div>
+      <div class="sk-bar-row"><div class="sk-bar-meta"><span class="sk-bar-name">S3 / EC2</span><span class="sk-bar-pct" style="color:#fbbf24">85%</span></div><div class="sk-track"><div class="sk-fill" data-w="85"></div></div></div>
+      <div class="sk-bar-row"><div class="sk-bar-meta"><span class="sk-bar-name">Lambda</span><span class="sk-bar-pct" style="color:#fbbf24">70%</span></div><div class="sk-track"><div class="sk-fill" data-w="70"></div></div></div>
+      <div class="sk-bar-row"><div class="sk-bar-meta"><span class="sk-bar-name">Amazon Bedrock</span><span class="sk-bar-pct" style="color:#fbbf24">60%</span></div><div class="sk-track"><div class="sk-fill" data-w="60"></div></div></div>
     </div>
 
-    <div class="skill-box">
-      <h3>💻 Programming</h3>
-      <ul>
-        <li>Python</li>
-        <li>SQL</li>
-        <li>Java</li>
-      </ul>
+    <!-- Orchestration -->
+    <div class="sk-card" style="--accent:#c084fc">
+      <div class="sk-header">
+        <span class="sk-icon">🔁</span>
+        <span class="sk-tag" style="color:#c084fc;background:rgba(192,132,252,.1);border-color:rgba(192,132,252,.25)">ORCHESTRATION</span>
+      </div>
+      <div class="sk-title">Workflow & Orchestration</div>
+      <div class="sk-sub">// scheduling, DAGs & reliability</div>
+      <div class="sk-bar-row"><div class="sk-bar-meta"><span class="sk-bar-name">Dagster</span><span class="sk-bar-pct" style="color:#c084fc">85%</span></div><div class="sk-track"><div class="sk-fill" data-w="85"></div></div></div>
+      <div class="sk-bar-row"><div class="sk-bar-meta"><span class="sk-bar-name">Medallion Architecture</span><span class="sk-bar-pct" style="color:#c084fc">85%</span></div><div class="sk-track"><div class="sk-fill" data-w="85"></div></div></div>
+      <div class="sk-bar-row"><div class="sk-bar-meta"><span class="sk-bar-name">ETL / ELT Design</span><span class="sk-bar-pct" style="color:#c084fc">90%</span></div><div class="sk-track"><div class="sk-fill" data-w="90"></div></div></div>
+      <div class="sk-bar-row"><div class="sk-bar-meta"><span class="sk-bar-name">Apache Airflow</span><span class="sk-bar-pct" style="color:#c084fc">65%</span></div><div class="sk-track"><div class="sk-fill" data-w="65"></div></div></div>
     </div>
 
-    <div class="skill-box">
-      <h3>🛠 Tools</h3>
-      <ul>
-        <li>Docker</li>
-        <li>GitHub</li>
-        <li>CI/CD</li>
-        <li>Pytest</li>
-        <li>JIRA</li>
-      </ul>
+    <!-- Programming -->
+    <div class="sk-card" style="--accent:#ff6b6b">
+      <div class="sk-header">
+        <span class="sk-icon">🐍</span>
+        <span class="sk-tag" style="color:#ff6b6b;background:rgba(255,107,107,.1);border-color:rgba(255,107,107,.25)">LANGUAGES</span>
+      </div>
+      <div class="sk-title">Programming</div>
+      <div class="sk-sub">// the glue that holds it all together</div>
+      <div class="sk-bar-row"><div class="sk-bar-meta"><span class="sk-bar-name">Python</span><span class="sk-bar-pct" style="color:#ff6b6b">90%</span></div><div class="sk-track"><div class="sk-fill" data-w="90"></div></div></div>
+      <div class="sk-bar-row"><div class="sk-bar-meta"><span class="sk-bar-name">SQL</span><span class="sk-bar-pct" style="color:#ff6b6b">85%</span></div><div class="sk-track"><div class="sk-fill" data-w="85"></div></div></div>
+      <div class="sk-bar-row"><div class="sk-bar-meta"><span class="sk-bar-name">Java</span><span class="sk-bar-pct" style="color:#ff6b6b">60%</span></div><div class="sk-track"><div class="sk-fill" data-w="60"></div></div></div>
+      <div class="sk-bar-row"><div class="sk-bar-meta"><span class="sk-bar-name">Bash / Shell</span><span class="sk-bar-pct" style="color:#ff6b6b">70%</span></div><div class="sk-track"><div class="sk-fill" data-w="70"></div></div></div>
+    </div>
+
+    <!-- Tools -->
+    <div class="sk-card" style="--accent:#00b4ff">
+      <div class="sk-header">
+        <span class="sk-icon">🛠️</span>
+        <span class="sk-tag" style="color:#00b4ff;background:rgba(0,180,255,.1);border-color:rgba(0,180,255,.25)">TOOLS</span>
+      </div>
+      <div class="sk-title">DevOps & Tools</div>
+      <div class="sk-sub">// ship fast, test well, iterate always</div>
+      <div class="sk-bar-row"><div class="sk-bar-meta"><span class="sk-bar-name">Docker</span><span class="sk-bar-pct" style="color:#00b4ff">80%</span></div><div class="sk-track"><div class="sk-fill" data-w="80"></div></div></div>
+      <div class="sk-bar-row"><div class="sk-bar-meta"><span class="sk-bar-name">GitHub / Git</span><span class="sk-bar-pct" style="color:#00b4ff">90%</span></div><div class="sk-track"><div class="sk-fill" data-w="90"></div></div></div>
+      <div class="sk-bar-row"><div class="sk-bar-meta"><span class="sk-bar-name">Pytest</span><span class="sk-bar-pct" style="color:#00b4ff">80%</span></div><div class="sk-track"><div class="sk-fill" data-w="80"></div></div></div>
+      <div class="sk-bar-row"><div class="sk-bar-meta"><span class="sk-bar-name">CI/CD Pipelines</span><span class="sk-bar-pct" style="color:#00b4ff">70%</span></div><div class="sk-track"><div class="sk-fill" data-w="70"></div></div></div>
+    </div>
+
+    <!-- Databases -->
+    <div class="sk-card" style="--accent:#34d399">
+      <div class="sk-header">
+        <span class="sk-icon">🗄️</span>
+        <span class="sk-tag" style="color:#34d399;background:rgba(52,211,153,.1);border-color:rgba(52,211,153,.25)">STORAGE</span>
+      </div>
+      <div class="sk-title">Databases & Storage</div>
+      <div class="sk-sub">// where data lives and thrives</div>
+      <div class="sk-bar-row"><div class="sk-bar-meta"><span class="sk-bar-name">MySQL / PostgreSQL</span><span class="sk-bar-pct" style="color:#34d399">85%</span></div><div class="sk-track"><div class="sk-fill" data-w="85"></div></div></div>
+      <div class="sk-bar-row"><div class="sk-bar-meta"><span class="sk-bar-name">Amazon S3 / Data Lake</span><span class="sk-bar-pct" style="color:#34d399">88%</span></div><div class="sk-track"><div class="sk-fill" data-w="88"></div></div></div>
+      <div class="sk-bar-row"><div class="sk-bar-meta"><span class="sk-bar-name">Iceberg Table Format</span><span class="sk-bar-pct" style="color:#34d399">80%</span></div><div class="sk-track"><div class="sk-fill" data-w="80"></div></div></div>
+      <div class="sk-bar-row"><div class="sk-bar-meta"><span class="sk-bar-name">Data Modelling (Medallion)</span><span class="sk-bar-pct" style="color:#34d399">85%</span></div><div class="sk-track"><div class="sk-fill" data-w="85"></div></div></div>
     </div>
 
   </div>
 </section>
-    <!--=========================================== 
-                      Contact section
-      =============================================  -->
-    <section class="contact" id="contact">
-      <h2 class="heading">Contact <span>Me</span></h2>
 
-      <form action="https://formspree.io/f/mleydwjq" method="POST">
-        <div class="input-box">
-          <div class="input-field">
-            <input
-              type="text"
-              name="username"
-              placeholder="Full Name"
-              id="username"
-              required
-              autocomplete="off"
-            />
-            <span class="focus"></span>
-          </div>
-          <div class="input-field">
-            <input
-              type="email"
-              name="email"
-              placeholder="Email Address"
-              id="email"
-              required
-              autocomplete="off"
-            />
-            <span class="focus"></span>
-          </div>
-        </div>
+<div class="section-divider"></div>
 
-        <div class="input-box">
-          <div class="input-field">
-            <input
-              type="number"
-              name="whnumber"
-              placeholder="Whatsapp Number"
-              id="whnumber"
-              required
-              autocomplete="off"
-            />
-            <span class="focus"></span>
-          </div>
-          <div class="input-field">
-            <input
-              type="text"
-              name="subject"
-              placeholder="Email Subject"
-              id="subject"
-              required
-              autocomplete="off"
-            />
-            <span class="focus"></span>
-          </div>
-        </div>
-
-        <div class="textarea-field">
-          <textarea
-            name="message"
-            id="message"
-            cols="30"
-            rows="10"
-            placeholder="Your Message..."
-            required
-            autocomplete="off"
-            minlength="15"
-          ></textarea>
-        </div>
-
-        <div class="btn-box btns">
-          <button type="submit" class="btn">Submit</button>
-        </div>
-      </form>
-    </section>
-
-    <!--=========================================== 
-                      Footer section
-      =============================================  -->
-    <footer class="footer">
-      <div class="footer-text">
-        <p>Copyright &copy; 2022 by Om Kenge | All Rights Reserved. Version 1.1</p>
+<!-- ═══════════════════════════════════════════════
+     CONTACT
+════════════════════════════════════════════════ -->
+<section id="contact">
+  <div class="section-label">contact.me</div>
+  <h2 class="heading">Let's <span>Connect</span></h2>
+  <div class="contact-wrap">
+    <div class="contact-info">
+      <p>I'm open to data engineering roles, freelance projects, and interesting pipeline challenges. If you have a data problem worth solving, let's talk.</p>
+      <div class="contact-links">
+        <a href="https://www.linkedin.com/in/omkenge" target="_blank" class="contact-link">
+          <i class="bx bxl-linkedin"></i>
+          linkedin.com/in/omkenge
+        </a>
+        <a href="https://github.com/omkenge" target="_blank" class="contact-link">
+          <i class="bx bxl-github"></i>
+          github.com/omkenge
+        </a>
+        <a href="https://discord.gg/MnqPCfdv" target="_blank" class="contact-link">
+          <i class="bx bxl-discord"></i>
+          Discord — Let's Talk
+        </a>
+        <a href="https://instagram.com/om.kenge" target="_blank" class="contact-link">
+          <i class="bx bxl-instagram"></i>
+          instagram.com/om.kenge
+        </a>
       </div>
-
-      <div class="footer-icontop">
-        <a href="#"><i class="bx bx-caret-up"></i></a>
+    </div>
+    <form class="contact-form" action="https://formspree.io/f/mleydwjq" method="POST">
+      <div class="form-row">
+        <div class="form-field">
+          <label>Full Name</label>
+          <input type="text" name="username" placeholder="John Doe" required autocomplete="off" />
+        </div>
+        <div class="form-field">
+          <label>Email Address</label>
+          <input type="email" name="email" placeholder="john@example.com" required autocomplete="off" />
+        </div>
       </div>
-    </footer>
+      <div class="form-row">
+        <div class="form-field">
+          <label>WhatsApp Number</label>
+          <input type="number" name="whnumber" placeholder="+91 9876543210" required autocomplete="off" />
+        </div>
+        <div class="form-field">
+          <label>Subject</label>
+          <input type="text" name="subject" placeholder="Data pipeline project..." required autocomplete="off" />
+        </div>
+      </div>
+      <div class="form-field">
+        <label>Message</label>
+        <textarea name="message" rows="5" placeholder="Tell me about your data challenge..." required autocomplete="off" minlength="15"></textarea>
+      </div>
+      <button type="submit" class="form-submit">→ Send Message</button>
+    </form>
+  </div>
+</section>
 
-    <!--=========================================== 
-                      Script Tag
-      =============================================  -->
-    <script src="script.js"></script>
-    <!--=========================================== 
-          This Script for typing animation
-      =============================================  -->
-    <script src="https://unpkg.com/typed.js@2.0.16/dist/typed.umd.js"></script>
-    <script>
-      var typed = new Typed("#element", {
-        strings: [
-          
-        
-       
-          "Learner"
-        ],
-        typeSpeed: 80,
-      });
-    </script>
-  </body>
+<!-- ═══════════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════════ -->
+<footer>
+  <p>© 2024 Om Kenge — Data Engineer &nbsp;·&nbsp; Built with precision, not templates.</p>
+  <a href="#home" class="back-top"><i class="bx bx-chevron-up"></i></a>
+</footer>
+
+<!-- ═══════════════════════════════════════════════
+     SCRIPTS
+════════════════════════════════════════════════ -->
+<script>
+  /* ── Cursor ── */
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top  = e.clientY + 'px';
+    ring.style.left   = e.clientX + 'px';
+    ring.style.top    = e.clientY + 'px';
+  });
+  document.querySelectorAll('a,button,.btn,.pipe-node,.chip,.sk-card,.contact-link,.stat-mini-box').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.style.transform = 'translate(-50%,-50%) scale(2.5)');
+    el.addEventListener('mouseleave', () => cursor.style.transform = 'translate(-50%,-50%) scale(1)');
+  });
+
+  /* ── Hamburger ── */
+  const hamburger = document.getElementById('hamburger');
+  const nav = document.getElementById('nav');
+  hamburger.addEventListener('click', () => nav.classList.toggle('open'));
+
+  /* ── Active nav on scroll ── */
+  const sections = document.querySelectorAll('section');
+  const navLinks = document.querySelectorAll('nav a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => { if (window.scrollY >= s.offsetTop - 120) current = s.id; });
+    navLinks.forEach(a => {
+      a.classList.remove('active');
+      if (a.getAttribute('href') === '#' + current) a.classList.add('active');
+    });
+  });
+
+  /* ── Typing animation (no external lib) ── */
+  const roles = ['Data Engineer', 'Pipeline Architect', 'AWS Glue Expert', 'PySpark Developer', 'ETL Specialist'];
+  let ri = 0, ci = 0, deleting = false;
+  const typeEl = document.getElementById('typeTarget');
+  function type() {
+    const word = roles[ri];
+    if (!deleting) {
+      typeEl.innerHTML = word.slice(0, ci+1) + '<span class="cursor-blink"></span>';
+      ci++;
+      if (ci === word.length) { deleting = true; setTimeout(type, 1800); return; }
+    } else {
+      typeEl.innerHTML = word.slice(0, ci-1) + '<span class="cursor-blink"></span>';
+      ci--;
+      if (ci === 0) { deleting = false; ri = (ri+1) % roles.length; }
+    }
+    setTimeout(type, deleting ? 60 : 90);
+  }
+  type();
+
+  /* ── Skill bar animation on scroll ── */
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.querySelectorAll('.sk-fill').forEach(bar => {
+          bar.style.width = bar.dataset.w + '%';
+        });
+      }
+    });
+  }, { threshold: 0.2 });
+  document.querySelectorAll('.sk-card').forEach(c => observer.observe(c));
+
+  /* ── Terminal cursor blink ── */
+  const tc = document.getElementById('termCursor');
+  if (tc) setInterval(() => tc.style.opacity = tc.style.opacity === '0' ? '1' : '0', 600);
+
+  /* ── Stagger section reveal ── */
+  const revealObs = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.tl-item, .sk-card, .stat-mini-box, .contact-link').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity .6s ease, transform .6s ease';
+    revealObs.observe(el);
+  });
+</script>
+</body>
 </html>
