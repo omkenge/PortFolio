@@ -9,6 +9,17 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+  <!-- ══ Google Analytics 4 ══ -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-RS4P9XVFBP"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-RS4P9XVFBP', {
+      send_page_view: true,
+      cookie_flags: 'SameSite=None;Secure'
+    });
+  </script>
   <style>
     /* ══ THEME TOKENS ══ */
     :root {
@@ -677,10 +688,97 @@ form.addEventListener('submit',async e=>{
   e.preventDefault();fsub.textContent='⟳ Sending…';fsub.disabled=true;
   try{
     const r=await fetch(form.action,{method:'POST',headers:{'Accept':'application/json'},body:new FormData(form)});
-    if(r.ok){showToast("Message sent! I'll get back to you soon.");form.reset();}
-    else showToast('Something went wrong. Try again.',true);
+    if(r.ok){
+      showToast("Message sent! I'll get back to you soon.");
+      form.reset();
+      /* ── GA4: contact form submitted ── */
+      gtag('event','form_submit',{event_category:'Contact',event_label:'Contact Form',value:1});
+    } else showToast('Something went wrong. Try again.',true);
   }catch{showToast('Network error. Check your connection.',true);}
   fsub.textContent='→ Send Message';fsub.disabled=false;
+});
+
+/* ══════════════════════════════════════════════
+   GA4 CUSTOM EVENT TRACKING
+══════════════════════════════════════════════ */
+
+/* ── 1. CV Download click ── */
+document.querySelector('a[download]').addEventListener('click',()=>{
+  gtag('event','file_download',{event_category:'CV',event_label:'OM_KENGE.pdf',value:1});
+});
+
+/* ── 2. Outbound link clicks (LinkedIn, GitHub, Discord, Instagram) ── */
+document.querySelectorAll('a[target="_blank"]').forEach(a=>{
+  a.addEventListener('click',()=>{
+    gtag('event','click',{
+      event_category:'Outbound Link',
+      event_label: a.href,
+      transport_type:'beacon'
+    });
+  });
+});
+
+/* ── 3. Scroll depth (25%, 50%, 75%, 90%) ── */
+const depthFired={};
+window.addEventListener('scroll',()=>{
+  const pct=Math.round(window.scrollY/(document.body.scrollHeight-window.innerHeight)*100);
+  [25,50,75,90].forEach(d=>{
+    if(pct>=d && !depthFired[d]){
+      depthFired[d]=true;
+      gtag('event','scroll_depth',{event_category:'Engagement',event_label:d+'%',value:d});
+    }
+  });
+},{passive:true});
+
+/* ── 4. Section visibility (track which sections recruiter actually reads) ── */
+const secNames={home:'Home',about:'About',education:'Journey',skills:'Tech Stack',projects:'Projects',certifications:'Certifications',contact:'Contact'};
+const secObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      gtag('event','section_view',{
+        event_category:'Section',
+        event_label: secNames[e.target.id]||e.target.id,
+        value:1
+      });
+      secObs.unobserve(e.target); // fire once per section
+    }
+  });
+},{threshold:0.4});
+document.querySelectorAll('section[id]').forEach(s=>secObs.observe(s));
+
+/* ── 5. Time on page (send engagement time every 30s) ── */
+let timeOnPage=0;
+setInterval(()=>{
+  timeOnPage+=30;
+  gtag('event','time_on_page',{
+    event_category:'Engagement',
+    event_label: timeOnPage+'s',
+    value:timeOnPage
+  });
+},30000);
+
+/* ── 6. Theme toggle tracking ── */
+themeBtn.addEventListener('click',()=>{
+  gtag('event','theme_toggle',{event_category:'UX',event_label:theme});
+});
+
+/* ── 7. Certification card clicks ── */
+document.querySelectorAll('.certc').forEach(c=>{
+  c.addEventListener('click',()=>{
+    gtag('event','cert_click',{
+      event_category:'Certifications',
+      event_label: c.querySelector('.certtitle')?.textContent||'cert',
+      value:1
+    });
+  });
+});
+
+/* ── 8. Project card GitHub link clicks ── */
+document.querySelectorAll('.pjlink').forEach(p=>{
+  p.addEventListener('click',()=>{
+    const title=p.closest('.pjc')?.querySelector('.pjtitle')?.textContent||'project';
+    gtag('event','project_click',{event_category:'Projects',event_label:title,value:1});
+  });
 });
 </script>
 </body>
